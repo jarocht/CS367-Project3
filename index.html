@@ -46,32 +46,38 @@ require([], function(){
     //X-red Y-green Z-blue
     scene.add(new THREE.AxisHelper(5));
 
-   // var cannonGroup = new THREE.Group();
-    var cylGeo = new THREE.CylinderGeometry(1.0, 0.7, 4.0, 32.0, 1.0, true);
-    var cylMat = new THREE.MeshPhongMaterial( {color: 0x00001d, side: THREE.DoubleSide} );
-    var cyl = new THREE.Mesh (cylGeo, cylMat);
-    cyl.rotateX(180);
-    cyl.translateY(5);
-    //cannonGroup.add(cyl);
+    // var cannonGroup = new THREE.Group();
 
-    var sphereGeo = new THREE.SphereGeometry(2, 32, 32);
+    var sphereGeo = new THREE.SphereGeometry(1.5, 32, 32);
     var sphereMat = new THREE.MeshPhongMaterial( {color: 0x000000, side: THREE.DoubleSide} );
     var sph = new THREE.Mesh (sphereGeo, sphereMat);
-    sph.add(cyl);
     sph.translateY(1.5);
-    scene.add(sph);
 
-    var wheel1geo = new THREE.TorusGeometry( 2, 0.5, 16, 100 );
+
+
+    var cylGeo = new THREE.CylinderGeometry(0.7, 1.0, 4.0, 32.0, 1.0, true);
+    var cylMat = new THREE.MeshPhongMaterial( {color: 0x00001d, side: THREE.DoubleSide} );
+    var cyl = new THREE.Mesh (cylGeo, cylMat);
+    cyl.rotateZ(-45);
+    cyl.translateY(3);
+
+    sph.add(cyl);
+    scene.add(sph);
+    //cannonGroup.add(cyl);
+
+
+
+  /*  var wheel1geo = new THREE.TorusGeometry( 2, 0.5, 16, 100 );
     var wheel1mat = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
     var wheel1 = new THREE.Mesh( wheel1geo, wheel1mat );
     wheel1.translateY(0.5);
     wheel1.translateX(1);
-    scene.add( wheel1 );
+    scene.add( wheel1 );*/
 
     //scene.add(cannonGroup);
 
     //Ground
-    var planeGeo = new THREE.PlaneGeometry(10.0, 10.0, 10);
+    var planeGeo = new THREE.PlaneGeometry(20.0, 20.0, 10);
     var planeMat = new THREE.MeshPhongMaterial( {color: 0x0ff00f, side: THREE.DoubleSide} );
     var plane = new THREE.Mesh (planeGeo, planeMat);
     plane.rotateX(THREE.Math.degToRad(-90));
