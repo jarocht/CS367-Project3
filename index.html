@@ -128,9 +128,8 @@ require([], function(){
 
     //var cannon_angle =
 
-	onRenderFcts.push(function(last, now){
+	onRenderFcts.push(function(delta, now){
         if(pauseAnim) return;
-        var delta = now - last;
         var tran = new THREE.Vector3();
         var quat = new THREE.Quaternion();
         var rot = new THREE.Quaternion();
@@ -144,11 +143,13 @@ require([], function(){
 
 		//base.rotateX(0.7 * delta);
 		//base.rotateY(1.5 * delta);
-        var ball_speed = .01;
+        var ball_speed = 1;
         if(fire == true) {
+            console.log(cannonBall.position.y);
             if(cannonBall.position.y >= -3) { //When center of ball reaches ground plane
                 cannonBall.translateY(Math.cos(Math.PI / 6) * delta * ball_speed);
                 cannonBall.translateX(Math.sin(Math.PI / 6) * delta * ball_speed * -1);
+                cannonBall.rotateY(THREE.Math.degToRad(10));
             } else {
                 cannonBall.position = new THREE.Vector3(0,0,0);
             }
@@ -171,6 +172,7 @@ require([], function(){
         var key = String.fromCharCode(event.keyCode || event.charCode);
         if (key == 'p') {
             pauseAnim ^= true; /* toggle it */
+            console.log("Animation is now: " + pauseAnim);
         }
         if (key == 'w') {
             base.rotateZ(Math.PI/6);
@@ -181,6 +183,7 @@ require([], function(){
         //Cannon go boom!
         if(key == 'f') {
             fire ^= true;
+            console.log("Fire is now: " + fire);
         }
         //Reset animation to init position
 /*        if(key == 'r') {
