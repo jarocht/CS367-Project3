@@ -9,7 +9,7 @@ require([], function(){
 	if( !Detector.webgl ){
 		Detector.addGetWebGLMessage();
 		throw 'WebGL Not Available'
-	} 
+	}
 	// setup webgl renderer full page
 	var renderer	= new THREE.WebGLRenderer();
 	renderer.setSize( window.innerWidth, window.innerHeight );
@@ -33,36 +33,43 @@ require([], function(){
 	//////////////////////////////////////////////////////////////////////////////////
 	//		default 3 points lightning					//
 	//////////////////////////////////////////////////////////////////////////////////
-	
-	var ambientLight= new THREE.AmbientLight( 0x020200 )
+
+	var ambientLight= new THREE.AmbientLight( 0x202020)
 	scene.add( ambientLight)
-	var frontLight	= new THREE.DirectionalLight('white', 1)
-	frontLight.position.set(0.5, 0.5, 2)
+	var frontLight	= new THREE.DirectionalLight('white', 2)
+	frontLight.position.set(5, 5, 2)
 	scene.add( frontLight )
 	var backLight	= new THREE.DirectionalLight('white', 0.75)
-	backLight.position.set(-0.5, -0.5, -2)
+	backLight.position.set(-3.5, -3.5, -2)
 	scene.add( backLight )
 
     //Spotlight
     var spotLight = new THREE.SpotLight(0xffffff);
-    spotLight.position.set(5, 5, 0);
+    spotLight.position.set(10, 10, 0);
     spotLight.castShadow = true;
-    spotLight.shadowMapWidth = 5;
-    spotLight.shadowMapHeight = 5;
+    spotLight.shadowMapWidth = 2;
+    spotLight.shadowMapHeight = 2;
     scene.add(spotLight);
+    scene.add ( new THREE.SpotLightHelper (spotLight, 0.2));
 
 	//////////////////////////////////////////////////////////////////////////////////
 	//		add an object and make it move					//
-	//////////////////////////////////////////////////////////////////////////////////	
+	//////////////////////////////////////////////////////////////////////////////////
 
     var cannonBall_cf = new THREE.Matrix4();
+
+    //** Load texture **//
+    var stone_tex = THREE.ImageUtils.loadTexture("textures/stone.jpg");
+    stone_tex.repeat.set(4,4);
+    stone_tex.wrapS = THREE.RepeatWrapping;
+    stone_tex.wrapT = THREE.RepeatWrapping;
 
     //X-red Y-green Z-blue
     scene.add(new THREE.AxisHelper(5));
 
     //Cannon base
     var baseGeo = new THREE.SphereGeometry(1.5, 32, 32);
-    var baseMat = new THREE.MeshPhongMaterial( {color: 0x000000, side: THREE.DoubleSide} );
+    var baseMat = new THREE.MeshPhongMaterial( {color: 0x000000,ambient:0x1d6438,map:stone_tex} );
     var base = new THREE.Mesh (baseGeo, baseMat);
     base.translateY(1.5);
 
@@ -103,7 +110,7 @@ require([], function(){
 
     //Ground
     var planeGeo = new THREE.PlaneGeometry(20.0, 20.0, 10);
-    var planeMat = new THREE.MeshPhongMaterial( {color: 0x0ff00f, side: THREE.DoubleSide} );
+    var planeMat = new THREE.MeshPhongMaterial({color:0x1d6438, ambient:0x1d6438, map:stone_tex});
     var plane = new THREE.Mesh (planeGeo, planeMat);
     plane.rotateX(THREE.Math.degToRad(-90));
     scene.add(plane);
@@ -134,7 +141,7 @@ require([], function(){
         }
 
 	})
-	
+
 	//////////////////////////////////////////////////////////////////////////////////
 	//		Camera Controls							//
 	//////////////////////////////////////////////////////////////////////////////////
@@ -159,9 +166,17 @@ require([], function(){
         if(key == 'f') {
             fire ^= true;
         }
-        //Rest animation to init position
-        if(key = 'r') {
-            
+        //Reset animation to init position
+/*        if(key == 'r') {
+
+        }*/
+        //Toggle spot light
+        if(key == '-'){
+            if(spotLight.intensity == 1) {
+                spotLight.intensity = 0;
+            }else{
+                spotLight.intensity = 1;
+            }
         }
     }, false);
     onRenderFcts.push(function(delta, now){
@@ -177,7 +192,7 @@ require([], function(){
 	onRenderFcts.push(function(){
 		renderer.render( scene, camera );
 	})
-	
+
 	//////////////////////////////////////////////////////////////////////////////////
 	//		Rendering Loop runner						//
 	//////////////////////////////////////////////////////////////////////////////////
