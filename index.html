@@ -102,6 +102,7 @@ require([], function(){
     cannonBall.castShadow = true;
     barrel.castShadow = true;
     base.castShadow = true;
+    cannonBall.add(new THREE.AxisHelper);
 
     barrel.add(cannonBall);
     base.add(barrel);
@@ -127,8 +128,9 @@ require([], function(){
 
     //var cannon_angle =
 
-	onRenderFcts.push(function(delta, now){
+	onRenderFcts.push(function(last, now){
         if(pauseAnim) return;
+        var delta = now - last;
         var tran = new THREE.Vector3();
         var quat = new THREE.Quaternion();
         var rot = new THREE.Quaternion();
@@ -142,12 +144,16 @@ require([], function(){
 
 		//base.rotateX(0.7 * delta);
 		//base.rotateY(1.5 * delta);
-
+        var ball_speed = .01;
         if(fire == true) {
-            if(cannonBall.position != plane.position) {
-                cannonBall.translateY(Math.cos(Math.PI / 6) * delta);
-                cannonBall.translateX(Math.sin(Math.PI / 6) * delta);
+            if(cannonBall.position.y >= -3) { //When center of ball reaches ground plane
+                cannonBall.translateY(Math.cos(Math.PI / 6) * delta * ball_speed);
+                cannonBall.translateX(Math.sin(Math.PI / 6) * delta * ball_speed * -1);
+            } else {
+                cannonBall.position = new THREE.Vector3(0,0,0);
             }
+        } else {
+            cannonBall.position = new THREE.Vector3(0,0,0);
         }
 
 	})
