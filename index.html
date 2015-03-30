@@ -14,6 +14,10 @@ require([], function(){
 	var renderer	= new THREE.WebGLRenderer();
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	document.body.appendChild( renderer.domElement );
+
+    var pauseAnim = false;
+    var fire = false;
+
 	// setup a scene and camera
 	var scene	= new THREE.Scene();
 	var camera	= new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.01, 1000);
@@ -43,33 +47,43 @@ require([], function(){
 	//		add an object and make it move					//
 	//////////////////////////////////////////////////////////////////////////////////	
 
+    var cannonBall_cf = new THREE.Matrix4();
+
     //X-red Y-green Z-blue
     scene.add(new THREE.AxisHelper(5));
-
 
     //Cannon base
     var sphereGeo = new THREE.SphereGeometry(1.5, 32, 32);
     var sphereMat = new THREE.MeshPhongMaterial( {color: 0x000000, side: THREE.DoubleSide} );
     var sph = new THREE.Mesh (sphereGeo, sphereMat);
     sph.translateY(1.5);
-    sph.castShadow = true;
 
     //Barrel
     var cylGeo = new THREE.CylinderGeometry(0.7, 1.0, 4.0, 32.0, 1.0, true);
     var cylMat = new THREE.MeshPhongMaterial( {color: 0x00001d, side: THREE.DoubleSide} );
     var cyl = new THREE.Mesh (cylGeo, cylMat);
-    cyl.rotateZ(-45);
+    //cyl.rotateZ(-45);
     cyl.translateY(3);
-    cyl.castShadow = true;
+
 
     var cannonBallGeo = new THREE.SphereGeometry(0.5, 32, 32);
     var cannonBallMat = new THREE.MeshPhongMaterial({color: 0xff0066 });
     var cannonBall = new THREE.Mesh(cannonBallGeo, cannonBallMat);
-    cannonBall.position = sph.position;
+    //cannonBall.position.x = cyl.position.x-2;
+ /*   var initLoc = cannonBall.position.set(sph.position.getComponent(0)+2, sph.position.getComponent(1)+1.5,
+            sph.position.getComponent(2));*/
+
+    sph.rotateZ(Math.PI/6);
+    cannonBall.castShadow = true;
+    cyl.castShadow = true;
+    sph.castShadow = true;
 
     cyl.add(cannonBall);
     sph.add(cyl);
     scene.add(sph);
+    //scene.add(cannonBall);
+
+    cannonBall_cf.copy(cannonBall.matrix);
 
 
 /*    var wheel1geo = new THREE.TorusGeometry( 2, 0.5, 16, 100 );
@@ -85,10 +99,29 @@ require([], function(){
     var plane = new THREE.Mesh (planeGeo, planeMat);
     plane.rotateX(THREE.Math.degToRad(-90));
     scene.add(plane);
-	
+
+    var cannon_angle =
+
 	onRenderFcts.push(function(delta, now){
-		sph.rotateX(0.5 * delta);
-		sph.rotateY(2.0 * delta);
+        if(pauseAnim) return;
+        var tran = new THREE.Vector3();
+        var quat = new THREE.Quaternion();
+        var rot = new THREE.Quaternion();
+        var vscale = new THREE.Vector3();
+
+    /*    cannonBall_cf.multiply(new THREE.Matrix4().makeRotationZ(THREE.Math.degToRad(delta * 72)));
+        cannonBall_cf.decompose(tran, quat, vscale);*/
+
+        //cannonBall.position.copy(tran);
+       // cannonBall.quaternion.copy(quat);
+
+		//sph.rotateX(0.7 * delta);
+		//sph.rotateY(1.5 * delta);
+
+        if(cannonBall.position != plane.position) {
+            cannonBall.translateY(Math.cos(Math.PI / 6) * delta);
+            cannonBall.translateX(Math.sin(Math.PI / 6) * delta);
+        }
 	})
 	
 	//////////////////////////////////////////////////////////////////////////////////
@@ -105,7 +138,25 @@ require([], function(){
         if (key == 'p') {
             pauseAnim ^= true; /* toggle it */
         }
+        if (key == 'w') {
+            sph.rotateZ(Math.PI/6);
+        }
+        if (key == 'a') {
+            sph.rotateY(Math.PI/6);
+        }
+        if(key == 'f') {
+            fire ^= true;
+        }
+        //Rest animation to init position
+        if(key = 'r') {
+
+        }
     }, false);
+    onRenderFcts.push(function(delta, now){
+        camera.position.x += (mouse.x*30 - camera.position.x) * (delta*3);
+        camera.position.y += (mouse.y*30 - camera.position.y) * (delta*3);
+        camera.lookAt( scene.position )
+    });
 
 
 	//////////////////////////////////////////////////////////////////////////////////
