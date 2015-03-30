@@ -61,34 +61,34 @@ require([], function(){
     scene.add(new THREE.AxisHelper(5));
 
     //Cannon base
-    var sphereGeo = new THREE.SphereGeometry(1.5, 32, 32);
-    var sphereMat = new THREE.MeshPhongMaterial( {color: 0x000000, side: THREE.DoubleSide} );
-    var sph = new THREE.Mesh (sphereGeo, sphereMat);
-    sph.translateY(1.5);
+    var baseGeo = new THREE.SphereGeometry(1.5, 32, 32);
+    var baseMat = new THREE.MeshPhongMaterial( {color: 0x000000, side: THREE.DoubleSide} );
+    var base = new THREE.Mesh (baseGeo, baseMat);
+    base.translateY(1.5);
 
     //Barrel
-    var cylGeo = new THREE.CylinderGeometry(0.7, 1.0, 4.0, 32.0, 1.0, true);
-    var cylMat = new THREE.MeshPhongMaterial( {color: 0x00001d, side: THREE.DoubleSide} );
-    var cyl = new THREE.Mesh (cylGeo, cylMat);
-    //cyl.rotateZ(-45);
-    cyl.translateY(3);
+    var barrelGeo = new THREE.CylinderGeometry(0.7, 1.0, 4.0, 32.0, 1.0, true);
+    var barrelMat = new THREE.MeshPhongMaterial( {color: 0x00001d, side: THREE.DoubleSide} );
+    var barrel = new THREE.Mesh (barrelGeo, barrelMat);
+    //barrel.rotateZ(-45);
+    barrel.translateY(3);
 
 
     var cannonBallGeo = new THREE.SphereGeometry(0.5, 32, 32);
     var cannonBallMat = new THREE.MeshPhongMaterial({color: 0xff0066 });
     var cannonBall = new THREE.Mesh(cannonBallGeo, cannonBallMat);
-    //cannonBall.position.x = cyl.position.x-2;
- /*   var initLoc = cannonBall.position.set(sph.position.getComponent(0)+2, sph.position.getComponent(1)+1.5,
-            sph.position.getComponent(2));*/
+    //cannonBall.position.x = barrel.position.x-2;
+ /*   var initLoc = cannonBall.position.set(base.position.getComponent(0)+2, base.position.getComponent(1)+1.5,
+            base.position.getComponent(2));*/
 
-    sph.rotateZ(Math.PI/6);
+    base.rotateZ(Math.PI/6);
     cannonBall.castShadow = true;
-    cyl.castShadow = true;
-    sph.castShadow = true;
+    barrel.castShadow = true;
+    base.castShadow = true;
 
-    cyl.add(cannonBall);
-    sph.add(cyl);
-    scene.add(sph);
+    barrel.add(cannonBall);
+    base.add(barrel);
+    scene.add(base);
     //scene.add(cannonBall);
 
     cannonBall_cf.copy(cannonBall.matrix);
@@ -123,13 +123,16 @@ require([], function(){
         //cannonBall.position.copy(tran);
        // cannonBall.quaternion.copy(quat);
 
-		//sph.rotateX(0.7 * delta);
-		//sph.rotateY(1.5 * delta);
+		//base.rotateX(0.7 * delta);
+		//base.rotateY(1.5 * delta);
 
-        if(cannonBall.position != plane.position) {
-            cannonBall.translateY(Math.cos(Math.PI / 6) * delta);
-            cannonBall.translateX(Math.sin(Math.PI / 6) * delta);
+        if(fire == true) {
+            if(cannonBall.position != plane.position) {
+                cannonBall.translateY(Math.cos(Math.PI / 6) * delta);
+                cannonBall.translateX(Math.sin(Math.PI / 6) * delta);
+            }
         }
+
 	})
 	
 	//////////////////////////////////////////////////////////////////////////////////
@@ -147,17 +150,18 @@ require([], function(){
             pauseAnim ^= true; /* toggle it */
         }
         if (key == 'w') {
-            sph.rotateZ(Math.PI/6);
+            base.rotateZ(Math.PI/6);
         }
         if (key == 'a') {
-            sph.rotateY(Math.PI/6);
+            base.rotateY(Math.PI/6);
         }
+        //Cannon go boom!
         if(key == 'f') {
             fire ^= true;
         }
         //Rest animation to init position
         if(key = 'r') {
-
+            
         }
     }, false);
     onRenderFcts.push(function(delta, now){
