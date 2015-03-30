@@ -17,7 +17,7 @@ require([], function(){
 
     var pauseAnim = false;
     var fire = false;
-    var ball_speed = 2;
+    var ball_speed = 4;
 
 	// setup a scene and camera
 	var scene	= new THREE.Scene();
@@ -140,21 +140,25 @@ require([], function(){
 		//base.rotateX(0.7 * delta);
 		//base.rotateY(1.5 * delta);
         if(fire == true) {
-            if(cannonBall.position.y >= -2.5) { //When center of ball reaches ground plane
+            cannonBall.localToWorld(cannonBall.position)
+            console.log(cannonBall.position);
+
+            if( cannonBall.position.y >= 0) { //When center of ball reaches ground plane
+                cannonBall.translateY(Math.cos(Math.PI / 6) * delta * ball_speed);
                 if (ball_speed > 0){
-                    cannonBall.translateX(Math.cos(Math.PI / 6)/Math.sin(Math.PI * 2 / 3) * delta * ball_speed * -1);
-                    cannonBall.translateY(Math.cos(Math.PI / 6)/Math.sin(Math.PI / 6) * delta * ball_speed);
+                    cannonBall.translateX(Math.sin(Math.PI / 6) * delta * ball_speed * -1);
                 } else {
-                    cannonBall.translateY(Math.cos(Math.PI / 6)/Math.sin(Math.PI * 2 / 3) * delta * ball_speed);
-                    cannonBall.translateX(Math.cos(Math.PI / 6)/Math.sin(Math.PI / 6) * delta * ball_speed);
+                    cannonBall.translateX(Math.sin(Math.PI / 6) * delta * ball_speed);
                 }
-                //cannonBall.rotateY(THREE.Math.degToRad(10));
-                ball_speed -= delta * 0.098; // 1/100th scale
+                ball_speed -= delta * 0.98; // 1/100th scale
             } else {
                 fire ^= true;
                 ball_speed = 1;
                 cannonBall.position = new THREE.Vector3(0,2,0);
             }
+            cannonBall.worldToLocal(cannonBall.position);
+            cannonBall.rotateY(THREE.Math.degToRad(1));
+
         } else {
             cannonBall.position = new THREE.Vector3(0,2,0);
         }
