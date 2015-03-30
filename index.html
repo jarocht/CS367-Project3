@@ -17,6 +17,7 @@ require([], function(){
 
     var pauseAnim = false;
     var fire = false;
+    var ball_speed = 2;
 
 	// setup a scene and camera
 	var scene	= new THREE.Scene();
@@ -87,23 +88,18 @@ require([], function(){
     var barrelGeo = new THREE.CylinderGeometry(0.7, 1.0, 4.0, 32.0, 1.0, true);
     var barrelMat = new THREE.MeshPhongMaterial( {color: 0x292E37, side: THREE.DoubleSide, map:metal_tex} );
     var barrel = new THREE.Mesh (barrelGeo, barrelMat);
-    //barrel.rotateZ(-45);
     barrel.translateY(3);
-
 
     var cannonBallGeo = new THREE.SphereGeometry(0.5, 32, 32);
     var cannonBallMat = new THREE.MeshPhongMaterial({map:caution_tex });
     var cannonBall = new THREE.Mesh(cannonBallGeo, cannonBallMat);
-    //cannonBall.position.x = barrel.position.x-2;
- /*   var initLoc = cannonBall.position.set(base.position.getComponent(0)+2, base.position.getComponent(1)+1.5,
-            base.position.getComponent(2));*/
 
-    base.rotateZ(Math.PI/6);
     cannonBall.castShadow = true;
+    cannonBall.add(new THREE.AxisHelper);
     barrel.castShadow = true;
     base.castShadow = true;
-    cannonBall.add(new THREE.AxisHelper);
 
+    base.rotateZ(Math.PI/6);
     barrel.add(cannonBall);
     base.add(barrel);
     scene.add(base);
@@ -143,18 +139,24 @@ require([], function(){
 
 		//base.rotateX(0.7 * delta);
 		//base.rotateY(1.5 * delta);
-        var ball_speed = 1;
         if(fire == true) {
-            console.log(cannonBall.position.y);
-            if(cannonBall.position.y >= -3) { //When center of ball reaches ground plane
-                cannonBall.translateY(Math.cos(Math.PI / 6) * delta * ball_speed);
-                cannonBall.translateX(Math.sin(Math.PI / 6) * delta * ball_speed * -1);
-                cannonBall.rotateY(THREE.Math.degToRad(10));
+            if(cannonBall.position.y >= -2.5) { //When center of ball reaches ground plane
+                if (ball_speed > 0){
+                    cannonBall.translateX(Math.cos(Math.PI / 6)/Math.sin(Math.PI * 2 / 3) * delta * ball_speed * -1);
+                    cannonBall.translateY(Math.cos(Math.PI / 6)/Math.sin(Math.PI / 6) * delta * ball_speed);
+                } else {
+                    cannonBall.translateY(Math.cos(Math.PI / 6)/Math.sin(Math.PI * 2 / 3) * delta * ball_speed);
+                    cannonBall.translateX(Math.cos(Math.PI / 6)/Math.sin(Math.PI / 6) * delta * ball_speed);
+                }
+                //cannonBall.rotateY(THREE.Math.degToRad(10));
+                ball_speed -= delta * 0.098; // 1/100th scale
             } else {
-                cannonBall.position = new THREE.Vector3(0,0,0);
+                fire ^= true;
+                ball_speed = 1;
+                cannonBall.position = new THREE.Vector3(0,2,0);
             }
         } else {
-            cannonBall.position = new THREE.Vector3(0,0,0);
+            cannonBall.position = new THREE.Vector3(0,2,0);
         }
 
 	})
