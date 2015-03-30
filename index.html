@@ -69,6 +69,11 @@ require([], function(){
     metal_tex.wrapS = THREE.RepeatWrapping;
     metal_tex.wrapT = THREE.RepeatWrapping;
 
+    var caution_tex = THREE.ImageUtils.loadTexture("textures/caution.jpg");
+    caution_tex.repeat.set(1,1);
+    caution_tex.wrapS = THREE.RepeatWrapping;
+    caution_tex.wrapT = THREE.RepeatWrapping;
+
     //X-red Y-green Z-blue
     scene.add(new THREE.AxisHelper(5));
 
@@ -87,7 +92,7 @@ require([], function(){
 
 
     var cannonBallGeo = new THREE.SphereGeometry(0.5, 32, 32);
-    var cannonBallMat = new THREE.MeshPhongMaterial({color: 0xff0066 });
+    var cannonBallMat = new THREE.MeshPhongMaterial({map:caution_tex });
     var cannonBall = new THREE.Mesh(cannonBallGeo, cannonBallMat);
     //cannonBall.position.x = barrel.position.x-2;
  /*   var initLoc = cannonBall.position.set(base.position.getComponent(0)+2, base.position.getComponent(1)+1.5,
