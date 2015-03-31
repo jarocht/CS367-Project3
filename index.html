@@ -110,12 +110,11 @@ require([], function(){
     var barrelMat = new THREE.MeshPhongMaterial( {color: 0x292E37, side: THREE.DoubleSide, map:caution_tex} );
     var barrel = new THREE.Mesh (barrelGeo, barrelMat);
     barrel.translateY(1.5);
-    barrel.rotateZ(Math.PI / 20);
 
     var cannonBallGeo = new THREE.SphereGeometry(0.5, 32, 32);
     var cannonBallMat = new THREE.MeshPhongMaterial({color: 0x292E37, map:metal_tex });
     var cannonBall = new THREE.Mesh(cannonBallGeo, cannonBallMat);
-    cannonBall.translateY(2.0);
+    //cannonBall.translateY(1.0);
 
 
     cannonBall.castShadow = true;
@@ -126,7 +125,7 @@ require([], function(){
 
     base.rotateZ(Math.PI/6);
     base.add(barrel);
-    base.add(cannonBall);
+    scene.add(cannonBall);
     scene.add(base);
 
     //Ground
@@ -144,7 +143,9 @@ require([], function(){
 
         if (fire == true) {
             cannonBall.localToWorld(cannonBall.position);
+            var worldX = cannonBall.position.x;
             var worldY = cannonBall.position.y;
+            var worldZ = cannonBall.position.z;
             cannonBall.worldToLocal(cannonBall.position);
 
             if (elapsed <= 360) {
@@ -166,7 +167,7 @@ require([], function(){
                 ball_speed = default_ball_speed;
                 cannonBall.position = new THREE.Vector3(0, 0, 0);
                 barrel.position = new THREE.Vector3(0,0,0);
-                cannonBall.translateY(2);
+                cannonBall.translateY(1.5);
                 barrel.translateY(1.5);
             }
             elapsed += delta * 100;
@@ -175,7 +176,7 @@ require([], function(){
             ball_speed = 4.0;
             cannonBall.position = new THREE.Vector3(0, 0, 0);
             barrel.position = new THREE.Vector3(0,0,0);
-            cannonBall.translateY(2);
+            cannonBall.translateY(1.5);
             barrel.translateY(1.5);
         }
     })
@@ -184,7 +185,7 @@ require([], function(){
 	//		Camera Controls							//
 	//////////////////////////////////////////////////////////////////////////////////
     var mouse	= {x : 0, y : 0};
-    var orbit = false;
+    var orbit = true;
     document.addEventListener('mousemove', function(event){
         mouse.x	= ((event.clientX - renderer.domElement.offsetLeft) / renderer.domElement.width ) * 2 - 1;
         mouse.y	= 1 - ((event.clientY - renderer.domElement.offsetTop) / renderer.domElement.height);
@@ -206,11 +207,11 @@ require([], function(){
             cannonAngle += cannonRotation;
         }
         if (key == '[') {
-            default_ball_speed++;
+            default_ball_speed--;
             console.log("Ball Speed Set to: " + default_ball_speed);
          }
          if (key == ']') {
-             default_ball_speed--;
+             default_ball_speed++;
              console.log("Ball Speed Set to: " + default_ball_speed);
          }
      /*   if (key == 'a') {
