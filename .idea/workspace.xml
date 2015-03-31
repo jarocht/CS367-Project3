@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="11bd6802-c298-476e-a49e-5e808b9aae3a" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/textures/metal.jpg" afterPath="$PROJECT_DIR$/textures/metal.jpg" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/textures/stone.jpg" afterPath="$PROJECT_DIR$/textures/stone.jpg" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
     </list>
     <ignored path="CS367-Project3.iws" />
@@ -31,8 +29,8 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.33274648" vertical-offset="865" max-vertical-offset="4012">
-              <caret line="62" column="30" selection-start-line="62" selection-start-column="30" selection-end-line="62" selection-end-column="30" />
+            <state vertical-scroll-proportion="0.072183095" vertical-offset="2152" max-vertical-offset="4097">
+              <caret line="129" column="33" selection-start-line="129" selection-start-column="33" selection-end-line="129" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -254,8 +252,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33274648" vertical-offset="865" max-vertical-offset="4012">
-          <caret line="62" column="30" selection-start-line="62" selection-start-column="30" selection-end-line="62" selection-end-column="30" />
+        <state vertical-scroll-proportion="0.072183095" vertical-offset="2152" max-vertical-offset="4097">
+          <caret line="129" column="33" selection-start-line="129" selection-start-column="33" selection-end-line="129" selection-end-column="33" />
           <folding />
         </state>
       </provider>
