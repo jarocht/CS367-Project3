@@ -25,7 +25,7 @@ require([], function(){
 	// setup a scene and camera
 	var scene	= new THREE.Scene();
 	var camera	= new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.01, 1000);
-    camera.position.set(0, 3, 30);
+    camera.position.set(0, 3, 20);
 
 
 	// declare the rendering loop
@@ -56,6 +56,24 @@ require([], function(){
     scene.add(spotLight);
     scene.add ( new THREE.SpotLightHelper (spotLight, 0.2));
 
+    // TEXTURE setup
+    var path = "textures/MAK/"
+    /* The image names can be ANYTHING, but the the order of the SIX images
+     in the array will be used as follows:
+     the 1st image => Positive X axis
+     the 2nd image => Negative X axis
+     the 3rh image => Positive Y axis
+     the 4th image => Negative Y axis
+     the 5th image => Positive Z axis
+     the 6th image => Negative Z axis
+     */
+
+    var images = [path + "posx.jpg", path + "negx.jpg",
+        path + "posy.jpg", path + "negy.jpg",
+        path + "posz.jpg", path + "negz.jpg"];
+
+    var cubemap = THREE.ImageUtils.loadTextureCube( images );
+
 	//////////////////////////////////////////////////////////////////////////////////
 	//		add an object and make it move					//
 	//////////////////////////////////////////////////////////////////////////////////
@@ -83,7 +101,7 @@ require([], function(){
 
     //Cannon base
     var baseGeo = new THREE.SphereGeometry(1.5, 32, 32);
-    var baseMat = new THREE.MeshPhongMaterial( {color: 0x292E37,map:metal_tex} );
+    var baseMat = new THREE.MeshBasicMaterial({envMap: cubemap});
     var base = new THREE.Mesh (baseGeo, baseMat);
     base.translateY(1.5);
 
@@ -92,11 +110,13 @@ require([], function(){
     var barrelMat = new THREE.MeshPhongMaterial( {color: 0x292E37, side: THREE.DoubleSide, map:caution_tex} );
     var barrel = new THREE.Mesh (barrelGeo, barrelMat);
     barrel.translateY(1.5);
+    barrel.rotateZ(Math.PI / 20);
 
     var cannonBallGeo = new THREE.SphereGeometry(0.5, 32, 32);
     var cannonBallMat = new THREE.MeshPhongMaterial({color: 0x292E37, map:metal_tex });
     var cannonBall = new THREE.Mesh(cannonBallGeo, cannonBallMat);
-    cannonBall.translateY(2);
+    cannonBall.translateY(2.0);
+
 
     cannonBall.castShadow = true;
     cannonBall.add(new THREE.AxisHelper);
@@ -105,8 +125,8 @@ require([], function(){
     base.castShadow = true;
 
     base.rotateZ(Math.PI/6);
-    base.add(cannonBall);
     base.add(barrel);
+    base.add(cannonBall);
     scene.add(base);
 
     //Ground
@@ -118,12 +138,9 @@ require([], function(){
 
     var ball_speed = default_ball_speed;
 
+
 	onRenderFcts.push(function(delta, now) {
         if (pauseAnim) return;
-        /*var tran = new THREE.Vector3();
-        var quat = new THREE.Quaternion();
-        var rot = new THREE.Quaternion();
-        var vscale = new THREE.Vector3();*/
 
         if (fire == true) {
             cannonBall.localToWorld(cannonBall.position);
@@ -139,7 +156,7 @@ require([], function(){
                 console.log(cannonBall.position);
                 cannonBall.translateY(Math.cos(cannonAngle) * delta * ball_speed);
                 if (ball_speed > 0) {
-                    cannonBall.translateX(Math.sin(cannonAngle) * delta * ball_speed * -1);
+                    cannonBall.translateX(Math.sin(cannonAngle) * delta * ball_speed*-1);
                 } else {
                     cannonBall.translateX(Math.sin(cannonAngle) * delta * ball_speed);
                 }
@@ -167,6 +184,7 @@ require([], function(){
 	//		Camera Controls							//
 	//////////////////////////////////////////////////////////////////////////////////
     var mouse	= {x : 0, y : 0};
+    var orbit = false;
     document.addEventListener('mousemove', function(event){
         mouse.x	= ((event.clientX - renderer.domElement.offsetLeft) / renderer.domElement.width ) * 2 - 1;
         mouse.y	= 1 - ((event.clientY - renderer.domElement.offsetTop) / renderer.domElement.height);
@@ -195,7 +213,7 @@ require([], function(){
              default_ball_speed--;
              console.log("Ball Speed Set to: " + default_ball_speed);
          }
-        /*if (key == 'a') {
+     /*   if (key == 'a') {
             base.translateX(-2);
         }
         if (key == 'd') {
@@ -213,10 +231,32 @@ require([], function(){
                 spotLight.intensity = 1;
             }
         }
+        if(key == '1') {
+           orbit ^= true;
+        }
+        //Front view
+        if(key == 'i') {
+            camera.position.set(-30, 3, 0);
+        }
+        if(key == 'k') {
+            camera.position.set(0, 6, -30);
+        }
+ /*       if(key == 'k') {
+            camera.position.y -= 2;
+        }
+        if(key == 'l') {
+            camera.position.x += 2;
+        }
+        if(key == 'j') {
+            camera.position.x -= 2;
+        }
+*/
     }, false);
     onRenderFcts.push(function(delta, now){
-        camera.position.x += (mouse.x*30 - camera.position.x) * (delta*3);
-        camera.position.y += (mouse.y*30 - camera.position.y) * (delta*3);
+        if(orbit == true) {
+            camera.position.x += (mouse.x*30 - camera.position.x) * (delta*3);
+            camera.position.y += (mouse.y*30 - camera.position.y) * (delta*3);
+        }
         camera.lookAt( scene.position )
     });
 
