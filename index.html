@@ -19,6 +19,8 @@ require([], function(){
     var fire = false;
     var cannonRotation = Math.PI / 6;;
     var cannonAngle = cannonRotation;
+    var default_ball_speed = 4.0;
+    var elapsed = 0;
 
 	// setup a scene and camera
 	var scene	= new THREE.Scene();
@@ -62,7 +64,7 @@ require([], function(){
 
     //** Load texture **//
     var stone_tex = THREE.ImageUtils.loadTexture("textures/stone.jpg");
-    stone_tex.repeat.set(6,6);
+    stone_tex.repeat.set(8,1);
     stone_tex.wrapS = THREE.RepeatWrapping;
     stone_tex.wrapT = THREE.RepeatWrapping;
 
@@ -108,21 +110,20 @@ require([], function(){
     scene.add(base);
 
     //Ground
-    var planeGeo = new THREE.PlaneGeometry(200.0, 200.0, 10);
+    var planeGeo = new THREE.PlaneGeometry(200.0, 20.0, 10);
     var planeMat = new THREE.MeshPhongMaterial({color:0x8B8D7A, ambient:0x1d6438, map:stone_tex});
     var plane = new THREE.Mesh (planeGeo, planeMat);
     plane.rotateX(THREE.Math.degToRad(-90));
     scene.add(plane);
 
-    var ball_speed = 4.0;
-    var elapsed = 0;
+    var ball_speed = default_ball_speed;
 
 	onRenderFcts.push(function(delta, now) {
         if (pauseAnim) return;
-        var tran = new THREE.Vector3();
+        /*var tran = new THREE.Vector3();
         var quat = new THREE.Quaternion();
         var rot = new THREE.Quaternion();
-        var vscale = new THREE.Vector3();
+        var vscale = new THREE.Vector3();*/
 
         if (fire == true) {
             cannonBall.localToWorld(cannonBall.position);
@@ -145,7 +146,7 @@ require([], function(){
                 ball_speed -= delta * 0.98; // 1/100th scale
             } else {
                 fire ^= true;
-                ball_speed = 4.0;
+                ball_speed = default_ball_speed;
                 cannonBall.position = new THREE.Vector3(0, 0, 0);
                 barrel.position = new THREE.Vector3(0,0,0);
                 cannonBall.translateY(2);
@@ -173,6 +174,7 @@ require([], function(){
 
     document.addEventListener('keypress', function(event){
         var key = String.fromCharCode(event.keyCode || event.charCode);
+        console.log(key);
         if (key == 'p') {
             pauseAnim ^= true; /* toggle it */
             console.log("Animation is now: " + pauseAnim);
@@ -185,6 +187,14 @@ require([], function(){
             base.rotateZ(cannonRotation);
             cannonAngle += cannonRotation;
         }
+        if (key == '[') {
+            default_ball_speed++;
+            console.log("Ball Speed Set to: " + default_ball_speed);
+         }
+         if (key == ']') {
+             default_ball_speed--;
+             console.log("Ball Speed Set to: " + default_ball_speed);
+         }
         /*if (key == 'a') {
             base.translateX(-2);
         }
@@ -195,10 +205,6 @@ require([], function(){
             fire ^= true;
             console.log("Fire is now: " + fire);
         }
-        //Reset animation to init position
-/*        if(key == 'r') {
-
-        }*/
         //Toggle spot light
         if(key == '-'){
             if(spotLight.intensity == 1) {
