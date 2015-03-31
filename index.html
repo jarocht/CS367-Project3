@@ -17,6 +17,8 @@ require([], function(){
 
     var pauseAnim = false;
     var fire = false;
+    var cannonRotation = Math.PI / 6;;
+    var cannonAngle = cannonRotation;
 
 	// setup a scene and camera
 	var scene	= new THREE.Scene();
@@ -127,7 +129,6 @@ require([], function(){
             var worldY = cannonBall.position.y;
             cannonBall.worldToLocal(cannonBall.position);
 
-            console.log(elapsed);
             if (elapsed <= 360) {
                 barrel.translateY(Math.sin(THREE.Math.degToRad(elapsed)) * -0.01);
                 barrel.rotateY(Math.sin(THREE.Math.degToRad(elapsed)) * -0.025);
@@ -135,11 +136,11 @@ require([], function(){
 
             if (worldY >= 0) { //When center of ball reaches ground plane
                 console.log(cannonBall.position);
-                cannonBall.translateY(Math.cos(Math.PI / 6) * delta * ball_speed);
+                cannonBall.translateY(Math.cos(cannonAngle) * delta * ball_speed);
                 if (ball_speed > 0) {
-                    cannonBall.translateX(Math.sin(Math.PI / 6) * delta * ball_speed * -1);
+                    cannonBall.translateX(Math.sin(cannonAngle) * delta * ball_speed * -1);
                 } else {
-                    cannonBall.translateX(Math.cos(Math.PI / 6) * delta * ball_speed);
+                    cannonBall.translateX(Math.sin(cannonAngle) * delta * ball_speed);
                 }
                 ball_speed -= delta * 0.98; // 1/100th scale
             } else {
@@ -173,10 +174,12 @@ require([], function(){
             console.log("Animation is now: " + pauseAnim);
         }
         if (key == 'w') {
-            base.rotateZ(Math.PI/6 * -1);
+            base.rotateZ(cannonRotation * -1);
+            cannonAngle -= cannonRotation;
         }
         if (key == 's') {
-            base.rotateZ(Math.PI/6);
+            base.rotateZ(cannonRotation);
+            cannonAngle += cannonRotation;
         }
         /*if (key == 'a') {
             base.translateX(-2);
