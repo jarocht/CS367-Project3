@@ -147,14 +147,18 @@ require([], function(){
                 fire ^= true;
                 ball_speed = 4.0;
                 cannonBall.position = new THREE.Vector3(0, 0, 0);
+                barrel.position = new THREE.Vector3(0,0,0);
                 cannonBall.translateY(2);
+                barrel.translateY(1.5);
             }
             elapsed += delta * 100;
         } else {
             elapsed = 0;
             ball_speed = 4.0;
-            cannonBall.position = new THREE.Vector3(0, 0, 0)
+            cannonBall.position = new THREE.Vector3(0, 0, 0);
+            barrel.position = new THREE.Vector3(0,0,0);
             cannonBall.translateY(2);
+            barrel.translateY(1.5);
         }
     })
 
