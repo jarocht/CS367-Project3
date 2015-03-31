@@ -60,7 +60,7 @@ require([], function(){
 
     //** Load texture **//
     var stone_tex = THREE.ImageUtils.loadTexture("textures/stone.jpg");
-    stone_tex.repeat.set(1,1);
+    stone_tex.repeat.set(6,6);
     stone_tex.wrapS = THREE.RepeatWrapping;
     stone_tex.wrapT = THREE.RepeatWrapping;
 
@@ -115,7 +115,7 @@ require([], function(){
     scene.add( wheel1 );*/
 
     //Ground
-    var planeGeo = new THREE.PlaneGeometry(20.0, 20.0, 10);
+    var planeGeo = new THREE.PlaneGeometry(200.0, 200.0, 10);
     var planeMat = new THREE.MeshPhongMaterial({color:0x8B8D7A, ambient:0x1d6438, map:stone_tex});
     var plane = new THREE.Mesh (planeGeo, planeMat);
     plane.rotateX(THREE.Math.degToRad(-90));
@@ -152,6 +152,7 @@ require([], function(){
             }
 
         } else {
+            ball_speed = 4.0;
             cannonBall.position = new THREE.Vector3(0, 2, 0)
         }
     })
